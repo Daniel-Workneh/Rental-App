@@ -6,8 +6,7 @@ import {
   Checkbox, 
   Link,
   Grid2, 
-  Box,
-  Paper, 
+  Box, 
   Divider,
   Typography,
   Container,
@@ -17,26 +16,31 @@ import {
 import BookAvatar from './images/BookAvatar.png';
 import BookAvatar_2 from './images/BookAvatar_2.png';
 
+//Define Components their layout
 
 function Copyright(props) {
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+    <Typography 
+      variant="body2"
+      align="center" 
+      {...props}
+      fontFamily='Dancing Script, cursive'
+      color="black"
+    >
       {'Copyright © '}
-      <Link color="#ff0000 " href="https://mui.com/">
-        www.dani.com
+      <Link color="#212121" href="https://mui.com/">
+        www.yashad.com
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
   );
 }
+
 const theme = createTheme();
-
-
 const defaultTheme = theme;
 function SignUp() {
   const handleSubmit = (event) => {
-    // event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get('email'),
@@ -44,28 +48,18 @@ function SignUp() {
     });
   };
   return (
-    // <ThemeProvider theme={theme}>
     <ThemeProvider theme={defaultTheme}>
-      <Container
-        component="main"
-        position ='relative'
-        display= 'flex'
-        flexWrap= 'wrap'
-        flex= '1'
-        marginTop='10rem'
-        padding="5rem"
-        flexDirection= 'column'
-        justifyContent= 'center'
-        alignContent= 'center'
-        maxWidth='50vw'
-        backgroundColor='silver'
+      <Grid2
+        sx={{
+          maxHeight:'100vh',
+          width:'50vw',
+        }} 
       >
         <CssBaseline />
-        <Grid2
+        <Container
           display='flex'
           flexWrap='wrap'
           flex='1'
-          padding="2rem"
           flexDirection='column'
           alignContent='flex-start'
           sx={{
@@ -73,25 +67,12 @@ function SignUp() {
             height:"100%",
             width:"auto",
             maxWidth: '50vw',
-    
+            gap: '1em',
           }}
         >
-          <Box
-            display= 'flex'
-            flexWrap="wrap"
-            flexDirection="column"
-            flex="1"
-            alignItems='flex-start'
-            justifyContent="flex-start"
-            gap='1rem'
-            sx={{
-              height:'auto',
-              maxHeight:'100%',
-              width:'auto',
-              maxWidth: '50vw'
-            }}
-          >
-            <Box
+          <Container>
+            <Grid2
+              container="true"
               display= 'flex'
               flexWrap="wrap"
               flexDirection="row"
@@ -100,7 +81,9 @@ function SignUp() {
               justifyContent="flex-start"
               sx={{
                 height: 'auto',
-                maxHeight:'5rem'
+                maxHeight:'5rem',
+                minWidth: '100px',
+                padding: '1rem',
               }}
             >
               <img
@@ -112,25 +95,42 @@ function SignUp() {
                   maxHeight: '100%'
                 }}
               /> 
-              <Typography component ="h2" variant ="h3">
+              <Typography 
+                component ="h3"
+                variant ="h4"
+                fontWeight="Bold"
+              >
                 Book Rent
               </Typography>
-            </Box>
-          
-            <Typography component="h1" variant="h5">
-              Log In
-            </Typography> 
-            <Divider 
-              orientation="horizontal" 
-              sx={{ 
-                my: '1rem', 
-                width:'100%', 
-                opacity: '2'
-              }} 
-            />
-          </Box>
-          
-          <Box 
+            </Grid2>
+            <Grid2
+              display= 'flex'
+              flexWrap="wrap"
+              flexDirection="row"
+              flex="1"
+              alignItems='center'
+              justifyContent="flex-start"
+              sx={{
+                height: 'auto',
+                maxHeight:'5rem',
+                padding: '1rem',
+              }}
+            >
+              <Typography 
+                component="h3"
+                variant="h5"
+              >
+                Log In
+              </Typography>
+              <Divider 
+                orientation="horizontal" 
+                sx={{  
+                  width:'100%', 
+                }} 
+              />
+            </Grid2>
+          </Container>
+          <Container 
             display="flex"
             flex="1"
             flexWrap="wrap"
@@ -139,7 +139,9 @@ function SignUp() {
             noValidate 
             onSubmit={handleSubmit} 
             sx={{
-              maxHeight:'100%'
+              maxHeight:'100%',
+              margin: '1em',
+              gap: '1em',
             }} 
           >
             <Grid2 
@@ -154,7 +156,6 @@ function SignUp() {
               maxHeight="100%"
               width="100%"
             >
-
               <TextField
                 required
                 fullWidth
@@ -163,7 +164,6 @@ function SignUp() {
                 type="email"
                 autoFocus
               />
-
               <TextField
                 required
                 fullWidth
@@ -172,15 +172,14 @@ function SignUp() {
                 type="Password"
                 autoComplete="Password"
               />
-              
               <Box 
                 sx={{
                   marginTop:'0em'
                   }}
                 >
-                <Link 
-                  href="#" 
-                  variant="body5" 
+                <Link
+                  href="#"
+                  variant="body5"
                   sx={{mt:2}}
                 >
                   <Typography>
@@ -189,7 +188,12 @@ function SignUp() {
                 </Link>
               </Box>
                 <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
+                  control={
+                    <Checkbox 
+                      value="allowExtraEmails"
+                      color="primary"
+                    />
+                  }
                   label="Remember me."
                 />
             </Grid2>
@@ -214,21 +218,23 @@ function SignUp() {
                 variant="body5" 
                 sx={{marginLeft:1}}
               >
-                Sign Up
+                <Typography variant="body1">
+                  Sign Up
+                </Typography>
               </Link>
             </Grid2>
-          </Box>
-        </Grid2>
-        <Copyright sx={{ mt: '4rem' }} />
-      </Container>
+          </Container>
+        </Container>
+        <Copyright sx={{ mt: '3rem' }} />
+      </Grid2>
     </ThemeProvider>
   );
 }
 
 export default function LogIn() {
   return (
-    <Grid2 
-      container 
+    <Grid2
+      container
       gap={0} 
       sx={{ 
         maxHeight: '100vh', 
@@ -236,66 +242,49 @@ export default function LogIn() {
         width:'100vw'
       }}
     >
-      <Grid2 
+      <Grid2
+        item 
         xs={6} 
         maxHeight='100%' 
         width='50vw'
+        backgroundColor="#000817"
       >
-        <Paper 
-          elevation={3}
-          sx={{
-            maxHeight: '100%',
-            height: '100%',
-            width: '100%',
-            backgroundColor: '#000817', 
-            display: 'flex', 
-            flexDirection: 'column', 
-            alignItems: 'center', 
-            justifyContent: 'center'
-          }}
-        >
-          <Box 
-            height="auto" 
-            maxHeight='100%'
+        <Container 
+            sx={{
+              width: '50vw',
+              maxWidth: '50vw',
+              height: '100vh',
+              maxHeight: '100vh',
+              padding: 0,
+              margin: 0,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              boxSizing: 'none',
+            }}
+            maxWidth={false} 
           >
             <img 
               src={BookAvatar_2} 
               style={{ 
-                width: '100%', 
-                height: '100%' 
+                maxWidth: '100%', 
+                maxHeight: '100%' 
               }}
               alt='Book'
             />
-          </Box>
-        </Paper>
+          </Container>
       </Grid2>
       <Grid2
-        display='flex'
-        flexDirection='column'
-        alignContent='center' 
-        justifyContent='left' 
+        item 
         xs={6} 
         maxHeight='100%' 
-        width='50vw'
+        maxWidth='50vw'
+        display='flex'
+        flexWrap="wrap"
+        alignItems="center" 
+        justifyContent='left'  
       >
-        <Paper 
-          elevation={3}
-          display= 'flex'
-          flexDirection= 'column'
-          alignContent= 'space-evenly' 
-          justifyContent= 'left'
-          sx={{
-            maxHeight: '100%',
-            height: '100%',
-            width: '100%', 
-          }} 
-        >
-          <Box  
-            maxHeight='100%'
-          >
-             <SignUp />
-          </Box>
-        </Paper>
+        <SignUp /> 
       </Grid2>
     </Grid2>
   );
