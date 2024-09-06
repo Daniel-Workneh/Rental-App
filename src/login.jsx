@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import {
   Button,
   CssBaseline,
@@ -11,13 +12,15 @@ import {
   Typography,
   Container,
   createTheme,
-  ThemeProvider
+  ThemeProvider,
+  Alert
 } from '@mui/material';
 import BookAvatar from './images/BookAvatar.png';
 import BookAvatar_2 from './images/BookAvatar_2.png';
+import loginSchema from './validation/loginSchema.jsx';
 
-//Define Components their layout
 
+//Define Components and their layout
 function Copyright(props) {
   return (
     <Typography 
@@ -39,14 +42,57 @@ function Copyright(props) {
 
 const theme = createTheme();
 const defaultTheme = theme;
+
 function SignUp() {
-  const handleSubmit = (event) => {
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({});
+// Handling changes
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    // Validate form data with Zod
+    const result = loginSchema.safeParse({ email, password });
+
+    if (!result.success) {
+      const errorMessages = result.error.errors.reduce((acc, err) => {
+        acc[err.path[0]] = err.message;
+        return acc;
+      }, 
+      {});
+      setErrors(errorMessages);
+      return;
+    }
+
+    // Proceed with API request if validation succeeds
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Login successful:', data);
+      }
+      else {
+        setErrors({ form: data.message || 'Login failed. Please try again.' });
+      }
+    } 
+    
+    catch (error) {
+      console.error('Error occurred during fetch:', error);
+      setErrors({ form: 'An error occurred. Please try again.' });
+    }
   };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid2
@@ -57,11 +103,6 @@ function SignUp() {
       >
         <CssBaseline />
         <Container
-          display='flex'
-          flexWrap='wrap'
-          flex='1'
-          flexDirection='column'
-          alignContent='flex-start'
           sx={{
             maxHeight:'100vh',
             height:"100%",
@@ -72,7 +113,7 @@ function SignUp() {
         >
           <Container>
             <Grid2
-              container="true"
+              container
               display= 'flex'
               flexWrap="wrap"
               flexDirection="row"
@@ -131,11 +172,7 @@ function SignUp() {
             </Grid2>
           </Container>
           <Container 
-            display="flex"
-            flex="1"
-            flexWrap="wrap"
             component="form"
-            flexDirection="column"
             noValidate 
             onSubmit={handleSubmit} 
             sx={{
@@ -159,19 +196,31 @@ function SignUp() {
               <TextField
                 required
                 fullWidth
-                id="email"
                 label="Email Address"
+                id="email"
                 type="email"
-                autoFocus
+                value={email}
+                variant='outlined'
+                margin='normal'
+                onChange={handleEmailChange}
+                error={!!errors.email}
+                helperText={errors.email}
               />
               <TextField
                 required
                 fullWidth
-                id="Password"
                 label="Password"
+                id="Password"
                 type="Password"
-                autoComplete="Password"
+                value={password}
+                variant='outlined'
+                margin='normal'
+                onChange={handlePasswordChange}
+                autoComplete="current-password"
+                error={!!errors.password}
+                helperText={errors.password}
               />
+              {errors.form && <Alert severity="error">{errors.form}</Alert>}
               <Box 
                 sx={{
                   marginTop:'0em'
@@ -243,7 +292,6 @@ export default function LogIn() {
       }}
     >
       <Grid2
-        item 
         xs={6} 
         maxHeight='100%' 
         width='50vw'
@@ -257,7 +305,6 @@ export default function LogIn() {
               maxHeight: '100vh',
               padding: 0,
               margin: 0,
-              display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
               boxSizing: 'none',
@@ -275,7 +322,6 @@ export default function LogIn() {
           </Container>
       </Grid2>
       <Grid2
-        item 
         xs={6} 
         maxHeight='100%' 
         maxWidth='50vw'
