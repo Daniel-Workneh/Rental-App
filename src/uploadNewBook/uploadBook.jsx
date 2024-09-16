@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import { Box, Typography, ListItem, ListItemButton, Grid2} from '@mui/material';
+import { Box, Typography, ListItem, ListItemButton, Grid2 } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import PropTypes from 'prop-types';
 import UploadIcon from '@mui/icons-material/Upload';
 
 const bookList = [
-  { "id": 1, "title": "To Kill a Mockingbird", "author": "Harper Lee" },
-  { "id": 2, "title": "1984", "author": "George Orwell" },
-  { "id": 3, "title": "Pride and Prejudice", "author": "Jane Austen" },
+  { "id": 1, "title": "ዴርቶጋዳ", "author": "ይስማከ ወርቁ" },
+  { "id": 2, "title": "ፍቅር እስከ መቃብር", "author": "ሐዲስ አለማየሁ" },
+  { "id": 3, "title": "እመጓ", "author": "Alemayehu Wassie" },
   { "id": 4, "title": "The Great Gatsby", "author": "F. Scott Fitzgerald" },
   { "id": 5, "title": "Moby-Dick", "author": "Herman Melville" },
   { "id": 6, "title": "War and Peace", "author": "Leo Tolstoy" },
@@ -37,7 +37,6 @@ const style1 = {
 const gridStyle ={
   position: 'absolute',
   display:'grid',
-  gap: 0,
   justifyContent: 'center',
   alignItems: 'center',
   alignCOntent:'center',
@@ -49,7 +48,6 @@ const gridStyle ={
   bottom: '0',
   left: '0',
   right: '0',
-  // backgroundColor: '#FAFAFA'
 }
 const style2 = {
   position: 'absolute',
@@ -65,6 +63,42 @@ const style2 = {
   gap: '2rem',
   boxSizing: 'border-box',
 }
+const UploadButton = () => {
+  const fileInputRef = useRef('');
+  const handleButtonClick = () => {
+    fileInputRef.current.click()
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      console.log('File selected:', file.name)
+  // Add your upload logic here
+    } 
+    else {
+      console.log('No file selected')
+    }
+  };
+  return (
+    <>
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
+      <Button
+        startIcon= {<UploadIcon />}
+        sx={{textTransform: 'capitalize'}}
+        onClick={handleButtonClick}
+      >
+        <Typography>
+          Upload Book Cover
+        </Typography>
+      </Button>
+    </>
+  );
+};
 
 function BookDropdown() {
   const [open, setOpen] = useState(false);
@@ -76,6 +110,8 @@ function BookDropdown() {
   const [newBookQuantity, setNewBookQuantity] = useState('');
   const [newRentPrice, setNewRentPrice] = useState('');
   const [inputValue, setInputValue] = useState('');
+  
+
 
   const handleAdd = () => {
     if (newBookTitle.trim() && newBookAuthor.trim() && newBookQuantity.trim() && newRentPrice.trim()) {
@@ -94,22 +130,27 @@ function BookDropdown() {
       xs={12}
       style = {gridStyle}
     >
-      <Box
+      <Grid2
+        container
+        direction= 'column'
         position='relative'
-        sx={style1}
-        flexDirection = 'column'
-        gap = '1rem'
+        gap = '2em'
       >
-        <Box
+        <Grid2
           position='relative'
-          sx={style1}
-          flexDirection = 'column'
         >
-          <Typography variant="h4" fontWeight='Bold' fontFamily ='Times New Roman, Times, serif'>
+          <Typography 
+            variant="h4" 
+            fontWeight='Bold' 
+            fontFamily ='Times New Roman, Times, serif' 
+            color='darkBlue' 
+            textAlign="center"
+            sx={{ textDecoration: 'underline', textDecorationThickness: '0.5px' }}
+          >
             Upload New Book
           </Typography>
-        </Box>
-        <Box
+        </Grid2>
+        <Grid2
           position='relative'
           sx={style1}
           flexDirection = 'column'
@@ -223,15 +264,12 @@ function BookDropdown() {
               </Button>
             </Box>
           </Modal>   
-        </Box>
-      </Box>
-      <Box
+        </Grid2>
+      </Grid2>
+      <Grid2
         position='relative'
-        sx={style1}
-        flexDirection='column'
-        gap = '1rem'
       >
-        <Box
+        <Grid2
           position='relative'
           sx={style1}
           flexDirection='row'
@@ -240,10 +278,10 @@ function BookDropdown() {
           <TextField
             margin="dense"
             label="Book Quantity"
-            placeholder='Book Quantity'
+            placeholder='How many pieces?'
             required
             type='number'
-            inputProps = {{ min: 0 }}
+            inputProps = {{ min: 0 }}     //needs an update 
             variant="outlined"
             sx = {{backgroundColor: '#EFEBE9', justifyContent: 'center'}}
             value={newBookQuantity}
@@ -251,40 +289,36 @@ function BookDropdown() {
           /> 
           <TextField
             margin="dense"
-            label="Rent Price for a week"
-            placeholder='Rent Price for 1 week'
+            label="Rent Price per week"
+            placeholder='How much for a week?'
             required
             variant="outlined"
-            sx = {{backgroundColor: '#EFEBE9'}}
+            sx = {{
+              backgroundColor: '#EFEBE9',
+            }}
             value={newRentPrice}
             onChange={(e) => setNewRentPrice(e.target.value)}
           />
-        </Box>
-        <Box
+        </Grid2>
+        <Grid2
           position='relative'
           sx={style1}
           flexDirection='column'
           gap = '2rem'
         >
-          <Button
-            startIcon= {<UploadIcon />}
-            sx={{textTransform: 'capitalize'}}
-          >
-            <Typography>
-              Upload Book Cover
-            </Typography>
-          </Button>
+          <UploadButton />
           <Button
             variant='contained'
             sx={{
               width: '200px',
               textTransform: 'capitalize'
             }}
+            // event handler definition is needed
           >
-            Submit
+            Submit      
           </Button>
-        </Box>
-      </Box>
+        </Grid2>
+      </Grid2>
     </Grid2>
   );
 }
